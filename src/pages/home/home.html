@@ -6,13 +6,163 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>home</ion-title>
+  <ion-navbar color="secondary">
+  	<button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Saldo : Rp. {{details.saldo}}</ion-title>
+    <ion-buttons end>
+		<button ion-button icon-only>
+			<ion-icon name="log-out"></ion-icon>
+		</button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+	
+	<ion-segment [(ngModel)]="typeHome">
+		<ion-segment-button value="details">
+			Details
+		</ion-segment-button>
+		<ion-segment-button value="pengeluaran">
+			Pengeluaran
+		</ion-segment-button>
+		<ion-segment-button value="pemasukan">
+			Pemasukan
+		</ion-segment-button>
+	</ion-segment>
 
+	<div [ngSwitch]="typeHome">
+
+		<div *ngSwitchCase="'details'">
+			<ion-list>
+				<ion-item>
+					<p>&nbsp;</p>
+				</ion-item>
+			  	<ion-item color="secondary">
+			  		<ion-icon name="cash" item-left></ion-icon>
+			  		Pemasukan
+			  		<span item-right>
+			  		Rp.{{details.totalPemasukan}}
+			      	</span>
+			  	</ion-item>
+			  	<ion-item color="danger">
+			   		<ion-icon name="cart" item-left></ion-icon>
+			  		Pengeluaran
+			  		<span item-right>
+			  		Rp.{{details.totalPengeluaran}}
+			      	</span>
+			  	</ion-item>
+			  	<ion-item>
+			  		<ion-icon name="alert" item-left></ion-icon>
+			  		Saldo
+			  		<span item-right>
+			  		Rp.{{details.saldo}}
+			      	</span>
+			  	</ion-item>
+			</ion-list>
+		</div>
+
+		<div *ngSwitchCase="'pemasukan'">
+			<ion-card *ngFor="let item of pemasukan | async">
+
+			   <ion-item color="secondary">
+			    <ion-icon name="cash" item-left large *ngIf="item.jenis == 'Gaji'"></ion-icon>
+			    <ion-icon name="cube" item-left large *ngIf="item.jenis == 'Pemberian'"></ion-icon>
+			    <ion-icon name="cart" item-left large *ngIf="item.jenis == 'Penjualan'"></ion-icon>
+			    <ion-icon name="medal" item-left large *ngIf="item.jenis == 'Penghargaan'"></ion-icon>
+			    <ion-icon name="add-circle" item-left large *ngIf="item.jenis == 'Lainnya'"></ion-icon>
+
+			    <h2>{{item.jenis}}</h2>
+			    <p>{{item.tanggal}}</p>
+			  </ion-item>
+
+			  <ion-card-content>
+			  	<p>&nbsp;</p>
+			  	<h1><b>Rp.{{item.jumlah}}</b></h1>
+			    <p>{{item.catatan}}</p>
+			  </ion-card-content>
+
+			  <ion-row>
+
+			    <ion-col>
+			      <button ion-button icon-left clear small (click)="updatePemasukan(item.$key, item)">
+			        <ion-icon name="create"></ion-icon>
+			        <div>Edit</div>
+			      </button>
+			    </ion-col>
+			    <ion-col>
+			      <button ion-button icon-left clear small color="danger" (click)="removePemasukan(item.$key, item)">
+			        <ion-icon name="trash"></ion-icon>
+			        <div>delete</div>
+			      </button>
+			    </ion-col>
+			    <ion-col center text-center>
+			      <ion-note>
+			        {{item.jam}} WIB
+			      </ion-note>
+			    </ion-col>
+			  </ion-row>
+
+			</ion-card>
+		</div>
+
+		<div *ngSwitchCase="'pengeluaran'">
+			<ion-card *ngFor="let item of pengeluaran | async">
+
+			   <ion-item color="danger">
+			    <ion-icon name="pizza" item-left large *ngIf="item.jenis == 'Konsumsi'"></ion-icon>
+			    <ion-icon name="car" item-left large *ngIf="item.jenis == 'Transportasi'"></ion-icon>
+			    <ion-icon name="shirt" item-left large *ngIf="item.jenis == 'Pakaian'"></ion-icon>
+			    <ion-icon name="pulse" item-left large *ngIf="item.jenis == 'Kesehatan'"></ion-icon>
+			    <ion-icon name="bicycle" item-left large *ngIf="item.jenis == 'Olahraga'"></ion-icon>
+			    <ion-icon name="add-circle" item-left large *ngIf="item.jenis == 'Lainnya'"></ion-icon>
+
+			    <h2>{{item.jenis}}</h2>
+			    <p>{{item.tanggal}}</p>
+			  </ion-item>
+
+			  <ion-card-content>
+			  	<p>&nbsp;</p>
+			  	<h1><b>Rp.{{item.jumlah}}</b></h1>
+			    <p>{{item.catatan}}</p>
+			  </ion-card-content>
+
+			  <ion-row>
+
+			    <ion-col>
+			      <button ion-button icon-left clear small (click)="updatePengeluaran(item.$key, item)">
+			        <ion-icon name="create"></ion-icon>
+			        <div>Edit</div>
+			      </button>
+			    </ion-col>
+			    <ion-col>
+			      <button ion-button icon-left clear small color="danger" (click)="removePengeluaran(item.$key)">
+			        <ion-icon name="trash"></ion-icon>
+			        <div>delete</div>
+			      </button>
+			    </ion-col>
+			    <ion-col center text-center>
+			      <ion-note>
+			        {{item.jam}} WIB
+			      </ion-note>
+			    </ion-col>
+			  </ion-row>
+
+			</ion-card>
+		</div>
+
+	</div>
+
+
+	 <ion-fab center bottom color="secondary">
+   		<button ion-fab (click)="toFormPage()"><ion-icon name="add"></ion-icon></button>
+ 	</ion-fab>
+
+ 	<p>
+    <button ion-button color="primary" menuToggle>Toggle Menu</button>
+  </p>
 </ion-content>

@@ -2,11 +2,5 @@
   "name": "Tugas",
   "app_id": "",
   "v2": true,
-  "typescript": true,
-  "proxies": [
-    {
-        "path": "/request_token",
-        "proxyUrl": "https://api.twitter.com/oauth/request_token"
-    }
-]
+  "typescript": true
 }
