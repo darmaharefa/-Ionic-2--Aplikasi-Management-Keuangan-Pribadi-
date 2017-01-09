@@ -1,1 +1,29 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="content">
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>User Information</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+	  <ion-item>
+	    <ion-icon name="contact" item-left>
+	    </ion-icon>
+	    <h2>{{data.username}}</h2>
+	    <p>
+	    	<ion-note item-right>{{data.email}}</ion-note>
+	    </p>
+	  </ion-item>
+	  <ion-item>
+	  	<ion-icon name="log-out" item-left>
+	    </ion-icon>
+	    <h2 (click)="doLogout()">Logout</h2>
+	  </ion-item>
+	</ion-list>
+  </ion-content>
+
+</ion-menu>
+
+<ion-nav [root]="rootPage" #content></ion-nav>

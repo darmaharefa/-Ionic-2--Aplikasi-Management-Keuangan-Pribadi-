@@ -27,8 +27,7 @@ export class HomePage {
     totalPemasukan   : 0,
     countPemasukan   : 0,
     totalPengeluaran : 0,
-    countPengeluaran : 0,
-    saldo            : 0
+    countPengeluaran : 0
   }
 
   saldo        : any = 0;
@@ -45,90 +44,81 @@ export class HomePage {
                 public storage: Storage
         			)
   {
-   
-     this.username = this.storage.get('username').then((user)=>{
-       console.log(user)
-       this.pemasukan   = af.database.list('/pemasukan/'+user);
-       this.pengeluaran = af.database.list('/pengeluaran/'+user);
-
-
-     //   // Hitung Total Pemasukan
-     //    this.pemasukan.subscribe(snapshot => {
-     //     snapshot.forEach(snapshot => {
-     //       console.log('2',snapshot.jumlah)
-     //       this.details.totalPemasukan += parseInt(snapshot.jumlah);
-     //       this.details.countPemasukan += 1;
-     //     })
-
-     //     console.log('3', this.details)
-     //    })
-
-     //   // Hitung Total Pengeluaran
-     //    this.pengeluaran.subscribe(snapshot => {
-     //     snapshot.forEach(snapshot => {
-     //       console.log('4',snapshot.jumlah)
-     //       this.details.totalPengeluaran += parseInt(snapshot.jumlah);
-     //       this.details.countPengeluaran += 1;
-     //     })
-
-     //     this.details.saldo = this.details.totalPemasukan - this.details.totalPengeluaran
-
-     //     console.log('5', this.details)
-     //    })
-     })
-
-  	 
+     // this.doFetch()
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
+    this.doFetch();
   }
 
-  ionOnInit(){
+  doFetch(){
+    this.username = this.storage.get('username').then((user)=>{
+       this.pemasukan   = this.af.database.list('/pemasukan/'+user);
+       this.pengeluaran = this.af.database.list('/pengeluaran/'+user);
 
+
+       // Hitung Total Pemasukan
+       let tempX = 0;
+       let tempY = 0;
+        this.pemasukan.subscribe(snapshot => {
+         snapshot.forEach(snapshot => {
+           tempX += parseInt(snapshot.jumlah)
+           tempY += 1;
+         })
+
+         this.details.totalPemasukan = tempX;
+         this.details.countPemasukan = tempY;
+         tempX = 0;
+         tempY = 0;
+
+         console.log('total pemasukan : ', this.details.totalPemasukan)
+         console.log('count pemasukan : ', this.details.countPemasukan)
+
+         this.saldo = this.details.totalPemasukan - this.details.totalPengeluaran
+         console.log('saldo :', this.saldo)
+        })
+
+        // Hitung Total Pengeluaran
+       let tempA = 0;
+       let tempB = 0;
+        this.pengeluaran.subscribe(snapshot => {
+         snapshot.forEach(snapshot => {
+           tempA += parseInt(snapshot.jumlah)
+           tempB += 1;
+         })
+
+         this.details.totalPengeluaran = tempA;
+         this.details.countPengeluaran = tempB;
+         tempA = 0;
+         tempB = 0;
+
+         console.log('total pengeluaran : ', this.details.totalPengeluaran)
+         console.log('count pengeluaran : ', this.details.countPengeluaran)
+
+         this.saldo = this.details.totalPemasukan - this.details.totalPengeluaran
+         console.log('saldo :', this.saldo)
+        })
+
+     })
   }
 
-  // hitungSaldo(){
-  //   let pemasukan   = 0;
-  //   let pengeluaran = 0;
-  //   this.username = this.storage.get('username').then((user)=>{
-  //      console.log(user)
-  //      this.pemasukan   = this.af.database.list('/pemasukan/'+user);
-  //      this.pengeluaran = this.af.database.list('/pengeluaran/'+user);
+  doRefresh(refresher) {
+    console.log('Begin async operation', refresher);
+    this.doFetch();
 
-
-  //      // Hitung Total Pemasukan
-  //       this.pemasukan.subscribe(snapshot => {
-  //        snapshot.forEach(snapshot => {
-  //          console.log('2',snapshot.jumlah)
-  //          this.details.totalPemasukan += parseInt(snapshot.jumlah);
-  //          this.details.countPemasukan += 1;
-  //        })
-
-  //        console.log('3', this.details)
-  //       })
-
-  //      // Hitung Total Pengeluaran
-  //       this.pengeluaran.subscribe(snapshot => {
-  //        snapshot.forEach(snapshot => {
-  //          console.log('4',snapshot.jumlah)
-  //          this.details.totalPengeluaran += parseInt(snapshot.jumlah);
-  //          this.details.countPengeluaran += 1;
-  //        })
-
-  //        this.details.saldo = this.details.totalPemasukan - this.details.totalPengeluaran
-
-  //        console.log('5', this.details)
-  //       })
-  //    })
-  // }
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      refresher.complete();
+    }, 2000);
+  }
 
   toFormPage(){
     this.navCtrl.push(FormPage)
   }
 
   removePemasukan(itemId, item){
-    this.details.saldo -= item.jumlah;
+
     this.pemasukan.remove(itemId)
   }
 

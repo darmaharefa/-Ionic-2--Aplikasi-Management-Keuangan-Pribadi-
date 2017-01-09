@@ -37,7 +37,6 @@ export class RegisterPage {
     console.log('Register Loaded');
   }
 
-
   toLoginPage(){
     this.navCtrl.push(LoginPage)
   }
@@ -81,6 +80,7 @@ export class RegisterPage {
     			console.log('data sudah ada')
     			console.log(snapshot)
     			alert.present()
+          loading.dismiss()
     		}
     		else{
     			loading.dismiss()

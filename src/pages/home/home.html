@@ -10,18 +10,22 @@
   	<button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Saldo : Rp. {{details.saldo}}</ion-title>
-    <ion-buttons end>
-		<button ion-button icon-only>
-			<ion-icon name="log-out"></ion-icon>
-		</button>
-    </ion-buttons>
+    <ion-title>Saldo : Rp. {{saldo}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+	<ion-refresher (ionRefresh)="doRefresh($event)">
+	    <ion-refresher-content
+	      pullingIcon="arrow-dropdown"
+	      pullingText="Pull to refresh"
+	      refreshingSpinner="circles"
+	      refreshingText="Refreshing...">
+	    </ion-refresher-content>
+	</ion-refresher>
 	
 	<ion-segment [(ngModel)]="typeHome">
 		<ion-segment-button value="details">
@@ -29,9 +33,11 @@
 		</ion-segment-button>
 		<ion-segment-button value="pengeluaran">
 			Pengeluaran
+			<!-- <ion-badge>{{details.countPengeluaran}}</ion-badge> -->
 		</ion-segment-button>
 		<ion-segment-button value="pemasukan">
 			Pemasukan
+			<!-- <ion-badge>{{details.countPemasukan}}</ion-badge> -->
 		</ion-segment-button>
 	</ion-segment>
 
@@ -44,14 +50,14 @@
 				</ion-item>
 			  	<ion-item color="secondary">
 			  		<ion-icon name="cash" item-left></ion-icon>
-			  		Pemasukan
+			  		Pemasukan ({{details.countPemasukan}})
 			  		<span item-right>
 			  		Rp.{{details.totalPemasukan}}
 			      	</span>
 			  	</ion-item>
 			  	<ion-item color="danger">
 			   		<ion-icon name="cart" item-left></ion-icon>
-			  		Pengeluaran
+			  		Pengeluaran ({{details.countPengeluaran}})
 			  		<span item-right>
 			  		Rp.{{details.totalPengeluaran}}
 			      	</span>
@@ -60,7 +66,7 @@
 			  		<ion-icon name="alert" item-left></ion-icon>
 			  		Saldo
 			  		<span item-right>
-			  		Rp.{{details.saldo}}
+			  		Rp.{{saldo}}
 			      	</span>
 			  	</ion-item>
 			</ion-list>
@@ -158,11 +164,8 @@
 	</div>
 
 
-	 <ion-fab center bottom color="secondary">
-   		<button ion-fab (click)="toFormPage()"><ion-icon name="add"></ion-icon></button>
+	 <ion-fab center bottom>
+   		<button color="secondary" ion-fab (click)="toFormPage()"><ion-icon name="add"></ion-icon></button>
  	</ion-fab>
 
- 	<p>
-    <button ion-button color="primary" menuToggle>Toggle Menu</button>
-  </p>
 </ion-content>

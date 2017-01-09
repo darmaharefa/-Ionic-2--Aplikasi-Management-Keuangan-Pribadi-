@@ -76,13 +76,11 @@ export class FormPage {
       alert.present()
     } else{
 
-      
       loading.present()
-
     	console.log('pemasukan added', this.frmPemasukan)
-
     	this.pemasukan.push(this.frmPemasukan)
     }
+
     this.navCtrl.pop()
 
     loading.dismiss()
